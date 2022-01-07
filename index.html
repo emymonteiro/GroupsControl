@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Two+Tone|Material+Icons+Round|Material+Icons+Sharp" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/vue@next"></script>
+    <title>Groups Panel</title>
+</head>
+<body>
+    <div id="app" class="w-full h-full flex justify-center font-display">
+        <div class="media:mt-20 w-[800px] flex flex-col shadow shadow-xl">
+            <div class="text-left flex font-bold items-center  bg-teal-800 p-5  w-full text-white">
+                <div class="flex flex-col uppercase">
+                    <p class="text-[1.5rem]">{{name}}</p>
+                    <p class="text-[.7rem] text-gray-400 mt-[-5px]">Painel de Controle</p>
+                </div>
+                <div class="ml-5 font-normal self-center flex justify-around space-x-3">
+                    <a @click="pages = 'painel' " v-bind:class="{ active: pages == 'painel'   }" class="hover:text-teal-300 font-bold cursor-pointer rounded-full px-3 py-1 hover:bg-teal-700 active:bg-teal-700">Painel</a>
+                    <a @click="pages = 'banco'  " v-bind:class="{ active: pages == 'banco'    }" class="hover:text-teal-300 font-bold cursor-pointer rounded-full px-3 py-1 hover:bg-teal-700 active:bg-teal-700">Banco</a>
+                    <a @click="pages = 'ranking'" v-bind:class="{ active: pages == 'ranking'  }" class="hover:text-teal-300 font-bold cursor-pointer rounded-full px-3 py-1 hover:bg-teal-700 active:bg-teal-700">Ranking</a>
+                    <a @click="pages = 'ranking2'" v-bind:class="{ active: pages == 'ranking2'}" class="hover:text-teal-300 font-bold cursor-pointer rounded-full px-3 py-1 hover:bg-teal-700 active:bg-teal-700">Ranking Geral</a>
+                    <a @click="pages = 'bau'    " v-bind:class="{ active: pages == 'bau'      }" class="hover:text-teal-300 font-bold cursor-pointer rounded-full px-3 py-1 hover:bg-teal-700 active:bg-teal-700">Baú</a>
+                </div>
+            </div>
+            <div class="p-5 flex relative justify-between text-[1em]" >
+                <div class="w-full" v-show="pages == 'painel'">
+                    <div class="flex space-x-5">
+                        <div class="w-20 h-20 media:w-28 p-3 text-white text-center flex flex-col shadow-sm uppercase font-bold flex items-center justify-center bg-green-600 rounded">
+                            <p class="w-full truncate">{{getOnline.length}}</p>
+                            <p class="text-[.7em]">online</p>
+                        </div>
+                        <div class="w-20 h-20 media:w-28 p-3 text-white text-center flex flex-col shadow-sm uppercase font-bold flex items-center justify-center bg-blue-500 rounded">
+                            <p class="w-full truncate">{{group.slots}}</p>
+                            <p class="text-[.7em]">Vagas</p>
+                        </div>
+                        <div class="w-20 h-20 media:w-28 p-3 text-white text-center flex flex-col shadow-sm uppercase font-bold flex items-center justify-center bg-blue-500 rounded">
+                            <p class="w-full truncate">{{group.total}}</p>
+                            <p class="text-[.7em]">Membros</p>
+                        </div>
+                    </div>
+                    <a class="bg-green-600 mt-5 px-5 py-2 w-36 cursor-pointer hover:bg-green-800 hover:text-green-200 rounded-full flex items-center text-white"> <span class="material-icons-outlined  mr-1">add</span>Contratar</a>
+                    
+                    <div class="flex flex-col pt-8">
+                        <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                            <div class="py-2 align-middle inline-block w-full sm:px-6 lg:px-8">
+                                
+                                <div class="shadow media:max-h-[600px] max-h-[350px] border-b border-gray-200 sm:rounded-lg ">
+                                   
+                                    <div v-if="!group.players.length > 0">
+                                        <p class="text-center text-gray-400 uppercase py-5">Nenhum Membro Disponível</p>
+                                    </div>
+                                    <table v-else class="w-full divide-y divide-gray-200 overflow-auto">
+                                        <thead class="bg-gray-50">
+                                            <tr>
+                                              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                Nome
+                                              </th>
+                                              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                Status
+                                              </th>
+                                              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                Cargo
+                                              </th>
+                                            </tr>
+                                          </thead>
+ 
+                                          <tbody class="bg-white divide-y divide-gray-200">
+                                            <tr v-for="(player, index) in group.players" :key="index">
+                                              <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="flex items-center">
+
+                                                  <div class="">
+                                                    <div class="text-sm font-medium text-gray-900">
+                                                      {{player.name}}
+                                                    </div>
+                                                    <div class="text-sm text-gray-500">
+                                                      ID: {{player.id}}
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                              </td>
+                                              
+                                              <td class="px-6 py-4 whitespace-nowrap">
+                                                <span v-if="player.status" class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                                    Online
+                                                </span>
+                                                <span v-else class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-300 text-gray-500">
+                                                  Offline
+                                                </span>
+                                              </td>
+                                              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                {{player.role}}
+                                              </td>
+                                              <td class="whitespace-nowrap text-sm text-gray-500">
+                                                <a href="" class="text-gray-400 hover:text-gray-800">
+                                                    <span class="material-icons">
+                                                        swap_vert
+                                                    </span>
+                                                        
+                                                </a>
+                                                <a href="" class="text-red-600 hover:text-red-800">
+                                                    <span class="material-icons-outlined">
+                                                        close
+                                                    </span>
+                                                </a>
+                                                    
+                                              </td>
+                                            </tr>
+                                          </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="w-full" v-show="pages == 'banco'">
+                    <div class="flex space-x-5 h-20 items-center">
+                        <a class="bg-green-600 px-5 py-2 rounded-full cursor-pointer text-white uppercase font-bold text-[.8em] hover:bg-green-500">Depositar</a>
+                        <a class="bg-blue-600  px-5 py-2 rounded-full cursor-pointer text-white uppercase font-bold text-[.8em] hover:bg-blue-500">Sacar</a>
+                    </div>
+                    <div class="flex flex-col pt-8">
+                        <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                            <div class="py-2 align-middle inline-block w-full sm:px-6 lg:px-8">
+                                <div class="shadow media:max-h-[600px] max-h-[350px] border-b border-gray-200 sm:rounded-lg ">
+                                    <div v-if="!bank.length > 0">
+                                        <p class="text-center text-gray-400 uppercase py-5">Nenhum Registro de Transação Bancária</p>
+                                    </div>
+                                    <table v-else class="w-full divide-y divide-gray-200 overflow-auto">
+                                        <thead class="bg-gray-50">
+                                            <tr>
+                                              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                Nome
+                                              </th>
+                                              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                Status
+                                              </th>
+                                              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                Valor
+                                              </th>
+                                            </tr>
+                                          </thead>
+                                          <tbody class="bg-white divide-y divide-gray-200">
+                                            <tr v-for="(player, index) in bank" :key="index">
+                                              <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="flex items-center">
+
+                                                  <div class="">
+                                                    <div class="text-sm font-medium text-gray-900">
+                                                      {{player.name}}
+                                                    </div>
+                                                    <div class="text-sm text-gray-500">
+                                                      ID: {{player.id}}
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                              </td>
+                                              
+                                              <td class="px-6 py-4 whitespace-nowrap">
+                                                <span v-if="player.status =='deposito'" class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                                    Depositou
+                                                </span>
+                                                <span v-else class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+                                                  Sacou
+                                                </span>
+                                              </td>
+                                              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                R$ {{player.value.toLocaleString('pt-BR')}}
+                                              </td>
+                                            </tr>
+                                          </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="w-full pt-20" v-show="pages == 'ranking'">
+                    <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                        <div class="py-2 align-middle inline-block w-full sm:px-6 lg:px-8">
+                            <div class="shadow media:max-h-[600px] max-h-[350px] border-b border-gray-200 sm:rounded-lg ">
+                                <table class="w-full divide-y divide-gray-200 overflow-auto">
+                                    <thead class="bg-gray-50">
+                                        <tr>
+                                          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Nome
+                                          </th>
+                                          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Valor
+                                          </th>
+                                        </tr>
+                                      </thead>
+                                      <tbody class="bg-white divide-y divide-gray-200">
+                                        <tr v-for="(player, index) in getTopDeposit" :key="index">
+                                          <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="flex items-center">
+
+                                              <div class="">
+                                                <div class="text-sm font-medium text-gray-900">
+                                                  {{player.name}}
+                                                </div>
+                                                <div class="text-sm text-gray-500">
+                                                  ID: {{player.id}}
+                                                </div>
+                                              </div>
+                                            </div>
+                                          </td>
+                                          
+                                          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                            R$ {{player.value.toLocaleString('pt-BR')}}
+                                          </td>
+                                        </tr>
+                                      </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="h-20 p-3 absolute right-5 w-28 media:w-40  text-white text-center flex flex-col shadow-sm uppercase font-bold flex items-center justify-center bg-gray-800 rounded">
+                    <p :title="'R$ ' + getTotal.value.toLocaleString('pt-BR')" class="w-full truncate">R$ {{getTotal.value.toLocaleString('pt-BR')}}</p>
+                    <p class="text-[.7em]">TOTAL</p>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+    <script src="./vue.js"></script>
+    <style>
+        .active{
+            background-color: #0f766e;
+            color: #5eead4;
+        }
+      </style>
+</body>
+<style>
+
+</style>
+</html>
